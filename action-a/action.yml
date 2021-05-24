@@ -1,0 +1,17 @@
+name: "Hey there"
+description: "First action"
+author: "fad3t"
+
+inputs:
+  MY_NAME:
+    description: "The guy"
+    required: true
+    default: "Banana"
+    
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  
+branding:
+  icon: mic
+  color: "green"
