@@ -1,0 +1,13 @@
+name: publish
+run-name: build is being published
+on:
+  workflow_run:
+    workflows: [hello]
+    types: [requested]
+    branches:
+    - main
+jobs:
+  publish-first:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "let's publish.."
