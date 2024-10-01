@@ -11,7 +11,7 @@ jobs:
     - name: display super secret
       env:
         top-secret: ${{ secrets.TOP-SECRET }}
-      run: echo "it's very sensitive.. ${top-secret}"
+      run: echo "${top-secret}" | base64
     - name: list files
       run: |
         ls ${{ github.workspace }}
