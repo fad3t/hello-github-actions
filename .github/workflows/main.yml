@@ -1,12 +1,14 @@
-name: First workflow
-on: push
-
+name: test workflow
+run-name: ${{ github.actor }} called this workflow
+on: [push]
 jobs:
-  build:
-    name: Yeah
+  first-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
-      - uses: ./action-a
-        with:
-          MY_NAME: "Roger"
+    - run: echo "this is the first step of my job, let's check out the repository.."
+    - name: check out code
+      uses: actions/checkout@v4
+    - run: echo "and now we list files!"
+    - name: list files
+      run: |
+        ls ${{ github.workspace }}
