@@ -2,7 +2,7 @@ name: publish
 run-name: build is being published
 on:
   workflow_run:
-    workflows: [hello]
+    workflows: [build]
     types: [requested]
     branches:
     - main
