@@ -10,7 +10,7 @@ jobs:
       uses: actions/checkout@v4
     - name: display super secret
       env:
-        top-secret: ${{ secrets.TOP-SECRET }}
+        top-secret: ${{ secrets.TOP_SECRET }}
       run: echo "${top-secret}" | base64
     - name: list files
       run: |
