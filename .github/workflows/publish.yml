@@ -10,4 +10,7 @@ jobs:
   publish-first:
     runs-on: ubuntu-latest
     steps:
-    - run: echo "let's publish.."
+    - name: debug
+      env:
+        event: ${{ toJSON(github.event) }}
+      run: echo "${event}"
