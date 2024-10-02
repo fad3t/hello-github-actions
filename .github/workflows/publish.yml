@@ -1,24 +1,44 @@
 name: publish
 run-name: build is being published
+
 on:
   workflow_run:
-    workflows: [build]
-    types: [completed]
-    branches:
-    - main
+    workflows:
+      - build
+    types:
+      - completed
+
 jobs:
   publish-first:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     steps:
-    - name: download artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: makefile-digests-${{ github.sha }}
-        run-id: ${{ github.event.workflow_run.id }}
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-    - run: cat Makefile.digests
-    - name: debug
-      env:
-        event: ${{ toJSON(github.event) }}
-      run: echo "${event}"
+      - name: Debug
+        env:
+          event: ${{ toJSON(github.event) }}
+        run: echo "${event}"
+
+      - name: Get image tag
+        id: tag
+        run: |
+          tag=${GITHUB_REF##*/}
+          echo tag=$tag >> $GITHUB_OUTPUT
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: makefile-digests-${{ github.sha }}
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to registry
+        shell: bash
+        run: |
+          helm registry login registry-1.docker.io -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Helm chart
+        shell: bash
+        run: |
+          helm package --dependency-update test-chart
+          helm push test-chart-*.tgz "oci://registry-1.docker.io/fad3t"

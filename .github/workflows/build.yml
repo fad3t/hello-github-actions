@@ -1,28 +1,40 @@
 name: build
 run-name: ${{ github.actor }} is running a build
-on: [push]
+
+on:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+      - v[0-9]+.[0-9]+.[0-9]+-*
+
 jobs:
   build-first:
     runs-on: ubuntu-latest
+    
     steps:
-    - run: echo "this is the first step of my job, let's check out the repository.."
-    - name: check out code
-      uses: actions/checkout@v4
-    - name: display super secret
-      env:
-        top-secret: ${{ secrets.TOP_SECRET }}
-      run: echo "${top-secret}" | base64
-    - name: list files
-      run: |
-        ls ${{ github.workspace }}
-    - name: generate digests
-      shell: bash
-      run: |
-        echo "hello" >> Makefile.digests
-        echo "world" >> Makefile.digests
-    - name: upload digests
-      uses: actions/upload-artifact@v4
-      with:
-        name: makefile-digests-${{ github.sha }}
-        path: Makefile.digests
-        retention-days: 3
+      - run: echo "this is the first step of my job, let's check out the repository.."
+
+      - name: check out code
+        uses: actions/checkout@v4
+
+      - name: display super secret
+        env:
+          top-secret: ${{ secrets.TOP_SECRET }}
+        run: echo "${top-secret}" | base64
+
+      - name: list files
+        run: |
+          ls ${{ github.workspace }}
+
+      - name: generate digests
+        shell: bash
+        run: |
+          echo "hello" >> Makefile.digests
+          echo "world" >> Makefile.digests
+
+      - name: upload digests
+        uses: actions/upload-artifact@v4
+        with:
+          name: makefile-digests-${{ github.sha }}
+          path: Makefile.digests
+          retention-days: 3
