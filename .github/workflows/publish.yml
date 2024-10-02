@@ -15,6 +15,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: makefile-digests-${{ github.sha }}
+        run-id: ${{ github.event.workflow_run.id }}
     - run: cat makefile-digests-${{ github.sha }}
     - name: debug
       env:
