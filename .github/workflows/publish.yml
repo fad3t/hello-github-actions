@@ -38,7 +38,8 @@ jobs:
       - name: Push Helm chart
         shell: bash
         run: |
-          version=${{ steps.tag.outputs.tag }}
-          ersion=${version#v}
+          version="${{ steps.tag.outputs.tag }}"
+          ersion="${version#v}"
+          echo "version is ${version}, ersion is ${ersion}"
           helm package test-chart --dependency-update --version "${ersion}"
           helm push test-chart-*.tgz "oci://registry-1.docker.io/fad3t"
