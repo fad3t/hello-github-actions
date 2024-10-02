@@ -17,7 +17,7 @@ jobs:
         name: makefile-digests-${{ github.sha }}
         run-id: ${{ github.event.workflow_run.id }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
-    - run: cat makefile-digests-${{ github.sha }}
+    - run: ls -ltR
     - name: debug
       env:
         event: ${{ toJSON(github.event) }}
