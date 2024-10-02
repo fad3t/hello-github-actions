@@ -11,6 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+    - name: download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: makefile-digests-${{ github.sha }}
+    - run: cat makefile-digests-${{ github.sha }}
     - name: debug
       env:
         event: ${{ toJSON(github.event) }}

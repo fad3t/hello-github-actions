@@ -21,7 +21,7 @@ jobs:
         echo "hello" >> Makefile.digests
         echo "world" >> Makefile.digests
     - name: upload digests
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v4
       with:
         name: makefile-digests-${{ github.sha }}
         path: Makefile.digests
