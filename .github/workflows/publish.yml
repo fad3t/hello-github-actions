@@ -14,14 +14,16 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-      - name: check out code
-        uses: actions/checkout@v4
-
       - name: Get image tag
         id: tag
         run: |
           tag=${GITHUB_REF##*/}
           echo tag=$tag >> $GITHUB_OUTPUT
+
+      - name: check out code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.tag.outputs.tag }}
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
