@@ -38,10 +38,20 @@ jobs:
           helm registry login registry-1.docker.io -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push Helm chart
+        id: push
         shell: bash
         run: |
           version="${{ steps.tag.outputs.tag }}"
           ersion="${version#v}"
           echo "version is ${version}, ersion is ${ersion}"
           helm package test-chart --dependency-update --version "${ersion}"
-          helm push test-chart-*.tgz "oci://registry-1.docker.io/fad3t"
+          helm push test-chart-*.tgz "oci://registry-1.docker.io/fad3t" &> metadata.txt
+          digest=$(awk '/Digest: /{print $2}' metadata.txt)
+          echo "digest=${digest}" >> GITHUB_OUTPUT
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@4959ce089c160fddf62f7b42464195ba1a56d382 # v3.6.0
+
+      - name: Sign Container Image
+        run: |
+          cosign sign -y registry-1.docker.io/fad3t/test-chart@${{ steps.push.outputs.digest }}
