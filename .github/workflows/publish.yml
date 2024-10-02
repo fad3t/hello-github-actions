@@ -17,7 +17,7 @@ jobs:
       - name: Get image tag
         id: tag
         run: |
-          tag=${GITHUB_REF##*/}
+          tag=${{ github.event.workflow_run.head_branch }}
           echo tag=$tag >> $GITHUB_OUTPUT
 
       - name: check out code
