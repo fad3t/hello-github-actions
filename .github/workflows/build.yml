@@ -37,8 +37,10 @@ jobs:
         run: |
           names=("cilium" "hubble-relay" "operator")
           for cnt in "${names[@]}"; do
+            job_name_capital=${cnt^^}
+            job_name_underscored=${job_name_capital//-/_}
             digest=$(crane digest quay.io/cilium/${cnt}:${{ inputs.tag }})
-            echo "digest for ${cnt} is ${digest}"
+            echo "export ${job_name_underscored}_DIGEST := ${digest}"
           done
 
       - name: display super secret
