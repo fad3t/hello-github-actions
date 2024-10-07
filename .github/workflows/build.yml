@@ -2,10 +2,15 @@ name: build
 run-name: ${{ github.actor }} is running a build
 
 on:
-  push:
-    tags:
-      - v[0-9]+.[0-9]+.[0-9]+
-      - v[0-9]+.[0-9]+.[0-9]+-*
+  # push:
+  #   tags:
+  #     - v[0-9]+.[0-9]+.[0-9]+
+  #     - v[0-9]+.[0-9]+.[0-9]+-*
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: tag
+        required: true
 
 jobs:
   build-first:
@@ -16,6 +21,14 @@ jobs:
 
       - name: check out code
         uses: actions/checkout@v4
+
+      - name: validate tag
+        shell: bash
+        run: |
+          if [[ ! "${{ inputs.tag }}" =~ "^v?[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]*)?$" ]]; then
+            echo "tag ${{ inputs.tag }} is invalid.."
+            exit 1
+          fi
 
       - name: display super secret
         env:
