@@ -35,8 +35,11 @@ jobs:
 
       - name: show digest for image with tag
         run: |
-          digest=$(crane digest registry-1.docker.io/fad3t/test-chart:${{ inputs.tag }})
-          echo "digest is ${digest}"
+          names=("cilium" "hubble-relay" "operator")
+          for cnt in "${names[@]}"; do
+            digest=$(crane digest quay.io/cilium/${cnt}:${{ inputs.tag }})
+            echo "digest for ${cnt} is ${digest}"
+          done
 
       - name: display super secret
         env:
